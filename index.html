@@ -15,8 +15,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.hidden { display: none; }
-
 .lang-container {
     display: flex;
     gap: 20px;
@@ -42,11 +40,6 @@ body {
 .box:hover {
     transform: scale(1.08);
     box-shadow: 0 0 25px rgba(255, 0, 100, 0.8);
-}
-
-img {
-    width: 150px;
-    height: auto;
 }
 
 .popup {
@@ -79,6 +72,8 @@ img {
         0 0 20px rgba(255,0,80,0.8),
         0 0 40px rgba(120,0,255,0.6);
 }
+
+.hidden { display: none; }
 </style>
 </head>
 
@@ -90,16 +85,15 @@ img {
     <div class="box" onclick="setLang('pl')">PL</div>
 </div>
 
-<!-- TOUCH -->
+<!-- TOUCH BUTTON -->
 <div class="container" id="touch">
-    <img src="https://cdn3.emoji.gg/emojis/91286-freaky.png" alt="emoji">
-    <div class="box" id="touchText" onclick="showOptions()"></div>
+    <div class="box" id="touchText" onclick="showOptions()">Touch Me</div>
 </div>
 
-<!-- OPTIONS -->
+<!-- OPTIONS (DATE & COACH) -->
 <div class="container hidden" id="options">
-    <div class="box" id="dateBox" onclick="showDiscord()"></div>
-    <div class="box" id="coachBox" onclick="showDiscord()"></div>
+    <div class="box" id="dateBox" onclick="showDiscord()">Date</div>
+    <div class="box" id="coachBox" onclick="showDiscord()">Coach</div>
 </div>
 
 <!-- POPUP -->
@@ -112,42 +106,27 @@ let lang = "en";
 
 function setLang(l) {
     lang = l;
+    updateTouchText();
+}
+
+function updateTouchText() {
+    const touch = document.getElementById("touchText");
+    touch.innerText = lang === "en" ? "Touch Me" : "Dotknij mnie";
 }
 
 function showOptions() {
-    // ukryj touch + obrazek
+    // ukryj Touch Me
     document.getElementById("touch").classList.add("hidden");
-
     // pokaż opcje
     document.getElementById("options").classList.remove("hidden");
 
-    document.getElementById("dateBox").innerText =
-        lang === "en" ? "Date" : "Randewu";
-
-    document.getElementById("coachBox").innerText =
-        lang === "en" ? "Coach" : "Coach";
+    document.getElementById("dateBox").innerText = lang === "en" ? "Date" : "Randewu";
+    document.getElementById("coachBox").innerText = lang === "en" ? "Coach" : "Coach";
 }
-
-document.getElementById("touchText").innerText =
-    lang === "en" ? "Touch Me" : "Dotknij mnie";
 
 function showDiscord() {
     document.getElementById("popup").classList.add("show");
 }
-
-// ustaw przycisk touch text po zmianie języka
-function updateTouchText() {
-    document.getElementById("touchText").innerText =
-        lang === "en" ? "Touch Me" : "Dotknij mnie";
-}
-
-// aktualizacja przy kliknięciu języka
-document.getElementById("lang").querySelectorAll('.box').forEach(el=>{
-    el.addEventListener('click', ()=>{
-        setLang(el.innerText.toLowerCase());
-        updateTouchText();
-    });
-});
 </script>
 
 </body>
