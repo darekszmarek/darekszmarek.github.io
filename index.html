@@ -396,6 +396,68 @@ body {
     right: 30px;
 }
 
+
+
+/* FAQ Button */
+.faq-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 30px;
+    font-size: 24px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0s;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.faq-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background-size: 200% 100%;
+    animation: rgbSlide 3s linear infinite;
+    pointer-events: none;
+}
+
+.faq-button:hover::before {
+    opacity: 1;
+}
+
+.faq-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 100, 255, 0.6);
+}
+
+/* FAQ Popup */
+.faq-popup {
+    max-width: 800px;
+    width: 90%;
+}
+
+.faq-list {
+    text-align: left;
+    font-size: 28px;
+    line-height: 1.8;
+    padding-left: 40px;
+}
+
+.faq-list li {
+    margin-bottom: 15px;
+}
+
 </style>
 </head>
 <body>
@@ -403,6 +465,8 @@ body {
 <canvas id="stars-canvas"></canvas>
 
 <div class="content-wrapper">
+    <!-- FAQ BUTTON -->
+    <div class="faq-button" id="faqButton">FAQ</div>
     <!-- LANGUAGE -->
     <div class="lang-container" id="lang">
         <div class="box" data-lang="en">EN</div>
@@ -452,6 +516,23 @@ body {
             Darek is really nice guy and friend, intelligent, gentleman, poet and super advanced intelligent person with an IQ of 120
         </div>
     </div>
+    
+    <!-- FAQ POPUP -->
+    <div class="popup faq-popup" id="faqPopup">
+        <span class="close-btn" onclick="closeFAQ()">&times;</span>
+        <div class="popup-content">
+            <h2 style="margin-bottom: 30px; font-size: 48px;">FAQ</h2>
+            <ol id="faqList" class="faq-list">
+                <li>darek jest mężczyzną</li>
+                <li>darek ma 17 lat</li>
+                <li>darek lubi stopy</li>
+                <li>darek gra w robloxa i valoranta</li>
+                <li>darek mieszka w polsce</li>
+                <li>darek lubi stopy</li>
+                <li>darek jest najlepszy</li>
+            </ol>
+        </div>
+    </div>
 
     <!-- EASTER EGG POPUP -->
     <div class="easter-egg-popup" id="easterEggPopup">
@@ -488,7 +569,16 @@ const translations = {
         darekInfo: "Darek is really nice guy and friend, intelligent, gentleman, poet and super advanced intelligent person with an IQ of 120",
         teoClicker: "Teo Clicker",
         clicks: "Clicks",
-        teoMessage: "darek likes feet"
+        teoMessage: "darek likes feet",
+        faq: [
+            "darek is a man",
+            "darek is 17 years old",
+            "darek likes feet",
+            "darek plays roblox and valorant",
+            "darek lives in poland",
+            "darek likes feet",
+            "darek is the best"
+        ]
     },
     pl: {
         touch: "Dotknij mnie",
@@ -499,7 +589,16 @@ const translations = {
         darekInfo: "Darek to naprawdę świetny ziutek i gościu, inteligentny, dżentelmen, poeta i super zaawansowanie inteligentny człowiek z ilością IQ 120",
         teoClicker: "Teo Clicker",
         clicks: "Kliknięcia",
-        teoMessage: "darek lubi stopy"
+        teoMessage: "darek lubi stopy",
+        faq: [
+            "darek jest mężczyzną",
+            "darek ma 17 lat",
+            "darek lubi stopy",
+            "darek gra w robloxa i valoranta",
+            "darek mieszka w polsce",
+            "darek lubi stopy",
+            "darek jest najlepszy"
+        ]
     }
 };
 
@@ -538,6 +637,18 @@ function updateAllText() {
     document.getElementById("darekPromptText").innerText = translations[lang].darekPrompt;
     document.getElementById("darekInfoText").innerText = translations[lang].darekInfo;
     document.getElementById("teoClickerBtn").innerText = translations[lang].teoClicker;
+    updateFAQList();
+}
+
+// Aktualizuj FAQ list
+function updateFAQList() {
+    const faqList = document.getElementById("faqList");
+    faqList.innerHTML = "";
+    translations[lang].faq.forEach(item => {
+        const li = document.createElement("li");
+        li.innerText = item;
+        faqList.appendChild(li);
+    });
 }
 
 // po kliknięciu Touch Me - smooth transition
@@ -616,6 +727,19 @@ function closeDarekInfo() {
     document.getElementById("darekInfoPopup").classList.remove("show");
 }
 
+
+
+// FAQ functions
+function showFAQ() {
+    playClickSound();
+    updateFAQList();
+    document.getElementById("faqPopup").classList.add("show");
+}
+
+function closeFAQ() {
+    playClickSound();
+    document.getElementById("faqPopup").classList.remove("show");
+}
 
 // Teo Clicker Game
 let teoClicks = 0;
@@ -749,6 +873,9 @@ document.getElementById("darekBtn").addEventListener('click', showDarekPrompt);
 // obsługa kliknięcia Teo Clicker
 document.getElementById("teoClickerBtn").addEventListener('click', showTeoGame);
 document.getElementById("teoImage").addEventListener('click', clickTeo);
+
+// obsługa kliknięcia FAQ
+document.getElementById("faqButton").addEventListener('click', showFAQ);
 </script>
 </body>
 </html>
