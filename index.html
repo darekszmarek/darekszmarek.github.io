@@ -7,8 +7,8 @@
 <style>
 body {
     margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #6a00ff, #ff0033);
+    min-height: 100vh;
+    background: black;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,16 +32,24 @@ body {
     font-size: 36px;
     border-radius: 20px;
     cursor: pointer;
-    background: rgba(0,0,0,0.7);
+    background: black;
     color: white;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 3px solid black;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* hover z dynamicznym RGB outline */
 .box:hover {
     transform: scale(1.08);
-    box-shadow: 0 0 25px rgba(255, 0, 100, 0.8);
+    border-color: rgb(
+        calc(128 + 127 * sin(var(--t))),
+        calc(128 + 127 * cos(var(--t))),
+        calc(128 + 127 * sin(var(--t) / 2))
+    );
+    box-shadow: 0 0 20px currentColor;
 }
 
+/* popup */
 .popup {
     position: fixed;
     top: 50%;
@@ -50,15 +58,13 @@ body {
     opacity: 0;
     pointer-events: none;
 
-    background: rgba(0,0,0,0.85);
+    background: black;
     color: white;
     padding: 40px 70px;
     font-size: 34px;
     border-radius: 25px;
 
     transition: opacity 0.3s ease, transform 0.3s ease;
-
-    box-shadow: 0 0 30px rgba(255,0,100,0.8);
 }
 
 .popup.show {
@@ -74,6 +80,13 @@ body {
 }
 
 .hidden { display: none; }
+
+#bottom-img {
+    margin-top: auto;
+    width: 150px;
+    height: auto;
+    margin-bottom: 30px;
+}
 </style>
 </head>
 
@@ -101,32 +114,54 @@ body {
     discord: darekszmarek
 </div>
 
+<!-- BOTTOM IMAGE -->
+<img id="bottom-img" src="https://cdn3.emoji.gg/emojis/91286-freaky.png" alt="emoji">
+
 <script>
 let lang = "en";
 
+// ustaw język
 function setLang(l) {
     lang = l;
     updateTouchText();
 }
 
+// aktualizacja przycisku Touch Me / Dotknij mnie
 function updateTouchText() {
     const touch = document.getElementById("touchText");
     touch.innerText = lang === "en" ? "Touch Me" : "Dotknij mnie";
 }
 
+// po kliknięciu Touch Me
 function showOptions() {
-    // ukryj Touch Me
     document.getElementById("touch").classList.add("hidden");
-    // pokaż opcje
     document.getElementById("options").classList.remove("hidden");
 
     document.getElementById("dateBox").innerText = lang === "en" ? "Date" : "Randewu";
     document.getElementById("coachBox").innerText = lang === "en" ? "Coach" : "Coach";
 }
 
+// popup discord
 function showDiscord() {
     document.getElementById("popup").classList.add("show");
 }
+
+// RGB animation na hover
+let t = 0;
+setInterval(()=> {
+    t += 0.05;
+    document.querySelectorAll('.box').forEach(el=>{
+        el.style.setProperty('--t', t);
+    });
+}, 30);
+
+// aktualizacja tekstu przy kliknięciu języka
+document.getElementById("lang").querySelectorAll('.box').forEach(el=>{
+    el.addEventListener('click', ()=>{
+        setLang(el.innerText.toLowerCase());
+        updateTouchText();
+    });
+});
 </script>
 
 </body>
