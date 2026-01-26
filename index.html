@@ -57,6 +57,8 @@ body {
     font-size: 34px;
     border-radius: 25px;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    border: 3px solid white;
+    position: relative;
 }
 .popup.show {
     opacity: 1;
@@ -67,6 +69,21 @@ body {
     box-shadow:
         0 0 20px rgba(255,0,80,0.8),
         0 0 40px rgba(120,0,255,0.6);
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 40px;
+    cursor: pointer;
+    color: white;
+    transition: color 0.2s ease, transform 0.2s ease;
+    line-height: 1;
+    font-weight: bold;
+}
+.close-btn:hover {
+    color: #ff0050;
+    transform: scale(1.2);
 }
 .hidden { display: none; }
 #bottom-img {
@@ -80,47 +97,71 @@ body {
 <body>
 <!-- LANGUAGE -->
 <div class="lang-container" id="lang">
-    <div class="box">EN</div>
-    <div class="box">PL</div>
+    <div class="box" data-lang="en">EN</div>
+    <div class="box" data-lang="pl">PL</div>
 </div>
 <!-- TOUCH BUTTON -->
 <div class="container" id="touch">
-    <div class="box" id="touchText" onclick="showOptions()">Touch Me</div>
+    <div class="box" id="touchText">Touch Me</div>
 </div>
 <!-- OPTIONS (DATE & COACH) -->
 <div class="container hidden" id="options">
-    <div class="box" id="dateBox" onclick="showDiscord()">Date</div>
-    <div class="box" id="coachBox" onclick="showDiscord()">Coach</div>
+    <div class="box" id="dateBox">Date</div>
+    <div class="box" id="coachBox">Coach</div>
 </div>
 <!-- POPUP -->
 <div class="popup" id="popup">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
     discord: darekszmarek
 </div>
 <!-- BOTTOM IMAGE -->
 <img id="bottom-img" src="https://cdn3.emoji.gg/emojis/91286-freaky.png" alt="emoji">
 <script>
 let lang = "en";
+
+const translations = {
+    en: {
+        touch: "Touch Me",
+        date: "Date",
+        coach: "Coach"
+    },
+    pl: {
+        touch: "Dotknij mnie",
+        date: "Randewu",
+        coach: "Coach"
+    }
+};
+
 // ustaw język
 function setLang(l) {
     lang = l;
-    updateTouchText();
+    updateAllText();
 }
-// aktualizacja przycisku Touch Me / Dotknij mnie
-function updateTouchText() {
-    const touch = document.getElementById("touchText");
-    touch.innerText = lang === "en" ? "Touch Me" : "Dotknij mnie";
+
+// aktualizacja wszystkich tekstów
+function updateAllText() {
+    document.getElementById("touchText").innerText = translations[lang].touch;
+    document.getElementById("dateBox").innerText = translations[lang].date;
+    document.getElementById("coachBox").innerText = translations[lang].coach;
 }
+
 // po kliknięciu Touch Me
 function showOptions() {
     document.getElementById("touch").classList.add("hidden");
     document.getElementById("options").classList.remove("hidden");
-    document.getElementById("dateBox").innerText = lang === "en" ? "Date" : "Randewu";
-    document.getElementById("coachBox").innerText = lang === "en" ? "Coach" : "Coach";
+    updateAllText(); // aktualizuj teksty przy pokazywaniu opcji
 }
+
 // popup discord
 function showDiscord() {
     document.getElementById("popup").classList.add("show");
 }
+
+// zamknij popup
+function closePopup() {
+    document.getElementById("popup").classList.remove("show");
+}
+
 // RGB animation na hover
 let t = 0;
 setInterval(()=> {
@@ -129,11 +170,27 @@ setInterval(()=> {
         el.style.setProperty('--t', t);
     });
 }, 30);
-// aktualizacja tekstu przy kliknięciu języka
-document.getElementById("lang").querySelectorAll('.box').forEach(el=>{
-    el.addEventListener('click', ()=>{
-        setLang(el.innerText.toLowerCase());
+
+// obsługa kliknięcia języka
+document.getElementById("lang").querySelectorAll('.box').forEach(el => {
+    el.addEventListener('click', () => {
+        const selectedLang = el.getAttribute('data-lang');
+        setLang(selectedLang);
     });
+});
+
+// obsługa kliknięcia Touch Me
+document.getElementById("touchText").addEventListener('click', showOptions);
+
+// obsługa kliknięcia Date i Coach
+document.getElementById("dateBox").addEventListener('click', showDiscord);
+document.getElementById("coachBox").addEventListener('click', showDiscord);
+
+// zamknij popup po kliknięciu poza nim
+document.getElementById("popup").addEventListener('click', (e) => {
+    if (e.target === document.getElementById("popup")) {
+        closePopup();
+    }
 });
 </script>
 </body>
