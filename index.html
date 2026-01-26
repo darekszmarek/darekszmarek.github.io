@@ -15,6 +15,17 @@
             font-family: Arial, sans-serif;
         }
 
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        img {
+            width: 150px; /* 👈 TUTAJ ZMIENIASZ ROZMIAR OBRAZKA */
+            height: auto;
+        }
+
         button {
             font-size: 48px;
             padding: 30px 60px;
@@ -42,7 +53,10 @@
 </head>
 <body>
 
-    <button onclick="showPopup()">Touch Me</button>
+    <div class="container">
+        <img src="https://cdn3.emoji.gg/emojis/91286-freaky.png" alt="emoji">
+        <button onclick="showPopup()">Touch Me</button>
+    </div>
 
     <div class="popup" id="popup">
         discord: darekszmarek
@@ -56,3 +70,4 @@
 
 </body>
 </html>
+
