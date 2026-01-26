@@ -10,16 +10,23 @@ body {
     height: 100vh;
     background: linear-gradient(135deg, #6a00ff, #ff0033);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
 }
 
 .hidden { display: none; }
 
+.lang-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
 .container {
     display: flex;
-    gap: 30px;
+    gap: 40px;
+    margin-top: 50px;
 }
 
 .box {
@@ -37,6 +44,11 @@ body {
     box-shadow: 0 0 25px rgba(255, 0, 100, 0.8);
 }
 
+img {
+    width: 150px;
+    height: auto;
+}
+
 .popup {
     position: fixed;
     top: 50%;
@@ -52,6 +64,8 @@ body {
     border-radius: 25px;
 
     transition: opacity 0.3s ease, transform 0.3s ease;
+
+    box-shadow: 0 0 30px rgba(255,0,100,0.8);
 }
 
 .popup.show {
@@ -71,13 +85,14 @@ body {
 <body>
 
 <!-- LANGUAGE -->
-<div class="container" id="lang">
+<div class="lang-container" id="lang">
     <div class="box" onclick="setLang('en')">EN</div>
     <div class="box" onclick="setLang('pl')">PL</div>
 </div>
 
 <!-- TOUCH -->
-<div class="container hidden" id="touch">
+<div class="container" id="touch">
+    <img src="https://cdn3.emoji.gg/emojis/91286-freaky.png" alt="emoji">
     <div class="box" id="touchText" onclick="showOptions()"></div>
 </div>
 
@@ -97,15 +112,13 @@ let lang = "en";
 
 function setLang(l) {
     lang = l;
-    document.getElementById("lang").classList.add("hidden");
-    document.getElementById("touch").classList.remove("hidden");
-
-    document.getElementById("touchText").innerText =
-        lang === "en" ? "Touch Me" : "Dotknij mnie";
 }
 
 function showOptions() {
+    // ukryj touch + obrazek
     document.getElementById("touch").classList.add("hidden");
+
+    // pokaż opcje
     document.getElementById("options").classList.remove("hidden");
 
     document.getElementById("dateBox").innerText =
@@ -115,9 +128,26 @@ function showOptions() {
         lang === "en" ? "Coach" : "Coach";
 }
 
+document.getElementById("touchText").innerText =
+    lang === "en" ? "Touch Me" : "Dotknij mnie";
+
 function showDiscord() {
     document.getElementById("popup").classList.add("show");
 }
+
+// ustaw przycisk touch text po zmianie języka
+function updateTouchText() {
+    document.getElementById("touchText").innerText =
+        lang === "en" ? "Touch Me" : "Dotknij mnie";
+}
+
+// aktualizacja przy kliknięciu języka
+document.getElementById("lang").querySelectorAll('.box').forEach(el=>{
+    el.addEventListener('click', ()=>{
+        setLang(el.innerText.toLowerCase());
+        updateTouchText();
+    });
+});
 </script>
 
 </body>
