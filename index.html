@@ -449,13 +449,25 @@ body {
 
 .faq-list {
     text-align: left;
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1.8;
-    padding-left: 40px;
+    list-style: none;
+    padding-left: 20px;
 }
 
 .faq-list li {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    font-weight: bold;
+    color: #ffcc00;
+    margin-bottom: 5px;
+}
+
+.faq-answer {
+    color: white;
+    padding-left: 20px;
 }
 
 </style>
@@ -571,13 +583,13 @@ const translations = {
         clicks: "Clicks",
         teoMessage: "darek likes feet",
         faq: [
-            "darek is a man",
-            "darek is 17 years old",
-            "darek likes feet",
-            "darek plays roblox and valorant",
-            "darek lives in poland",
-            "darek likes feet",
-            "darek is the best"
+            { q: "Who is darek?", a: "darek is a man" },
+            { q: "How old is darek?", a: "darek is 17 years old" },
+            { q: "What does darek like?", a: "darek likes feet" },
+            { q: "What does darek play?", a: "darek plays roblox and valorant" },
+            { q: "Where does darek live?", a: "darek lives in poland" },
+            { q: "What does darek like?", a: "darek likes feet" },
+            { q: "How is darek?", a: "darek is the best" }
         ]
     },
     pl: {
@@ -591,13 +603,13 @@ const translations = {
         clicks: "Kliknięcia",
         teoMessage: "darek lubi stopy",
         faq: [
-            "darek jest mężczyzną",
-            "darek ma 17 lat",
-            "darek lubi stopy",
-            "darek gra w robloxa i valoranta",
-            "darek mieszka w polsce",
-            "darek lubi stopy",
-            "darek jest najlepszy"
+            { q: "Kim jest darek?", a: "darek jest mężczyzną" },
+            { q: "Ile lat ma darek?", a: "darek ma 17 lat" },
+            { q: "Co lubi darek?", a: "darek lubi stopy" },
+            { q: "W co gra darek?", a: "darek gra w robloxa i valoranta" },
+            { q: "Gdzie mieszka darek?", a: "darek mieszka w polsce" },
+            { q: "Co lubi darek?", a: "darek lubi stopy" },
+            { q: "Jaki jest darek?", a: "darek jest najlepszy" }
         ]
     }
 };
@@ -644,9 +656,16 @@ function updateAllText() {
 function updateFAQList() {
     const faqList = document.getElementById("faqList");
     faqList.innerHTML = "";
-    translations[lang].faq.forEach(item => {
+    translations[lang].faq.forEach((item, index) => {
         const li = document.createElement("li");
-        li.innerText = item;
+        const question = document.createElement("div");
+        question.className = "faq-question";
+        question.innerText = `${index + 1}. ${item.q}`;
+        const answer = document.createElement("div");
+        answer.className = "faq-answer";
+        answer.innerText = `→ ${item.a}`;
+        li.appendChild(question);
+        li.appendChild(answer);
         faqList.appendChild(li);
     });
 }
