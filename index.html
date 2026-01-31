@@ -21,14 +21,15 @@
       z-index: 0;
     }
 
+    /* ⬆️ wyżej */
     .center {
       position: absolute;
-      top: 50%;
+      top: 38%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 22px;
       z-index: 2;
       white-space: nowrap;
     }
@@ -41,32 +42,39 @@
         0 0 18px rgba(255,255,255,0.35);
     }
 
-    /* ⚡ ELECTRIC NEON */
+    /* ⚡ PRO NEON – bez skoków */
     .neon {
       font-size: 72px;
 
       background: linear-gradient(
         90deg,
-        rgb(80, 190, 255),
-        rgb(160, 230, 255),
-        rgb(80, 190, 255)
+        rgb(255, 220, 80),   /* żółty */
+        rgb(90, 200, 255),   /* electric blue */
+        rgb(170, 235, 255),  /* jasny błękit */
+        rgb(90, 200, 255),
+        rgb(255, 220, 80)
       );
-      background-size: 300% 100%;
-      animation: electricFlow 2.8s linear infinite;
+
+      background-size: 400% 100%;
+      animation: neonBreathe 3.2s ease-in-out infinite alternate;
 
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
 
-      /* podkręcony, ale nadal czysty glow */
+      /* dopracowany glow */
       filter:
-        drop-shadow(0 0 8px rgba(80, 190, 255, 0.9))
-        drop-shadow(0 0 18px rgba(120, 210, 255, 0.6))
-        drop-shadow(0 0 32px rgba(80, 190, 255, 0.35));
+        drop-shadow(0 0 10px rgba(120, 210, 255, 0.9))
+        drop-shadow(0 0 22px rgba(120, 210, 255, 0.6))
+        drop-shadow(0 0 36px rgba(255, 220, 80, 0.35));
     }
 
-    @keyframes electricFlow {
-      0%   { background-position:   0% 50%; }
-      100% { background-position: 100% 50%; }
+    @keyframes neonBreathe {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 100% 50%;
+      }
     }
   </style>
 </head>
