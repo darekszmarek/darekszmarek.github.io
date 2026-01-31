@@ -5,11 +5,6 @@
   <title>darek top EU</title>
 
   <style>
-    @font-face {
-      font-family: "SuperBoys";
-      src: url("fonts/SuperBoys.ttf") format("truetype");
-    }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -17,7 +12,7 @@
       height: 100%;
       background: black;
       overflow: hidden;
-      font-family: "SuperBoys", sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     canvas {
@@ -42,28 +37,37 @@
       font-size: 72px;
       color: white;
       text-shadow:
-        0 0 10px rgba(255,255,255,0.6),
-        0 0 25px rgba(255,255,255,0.4);
+        0 0 8px rgba(255,255,255,0.5),
+        0 0 18px rgba(255,255,255,0.3);
     }
 
+    /* 🔥 NEON */
     .neon {
       font-size: 72px;
-      animation: neonShift 4s linear infinite;
+      background: linear-gradient(
+        90deg,
+        rgb(255, 230, 0),
+        rgb(120, 220, 255),
+        rgb(255, 230, 0)
+      );
+      background-size: 200% 100%;
+      animation: neonMove 4s linear infinite;
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      /* mniejszy glow */
       filter:
-        drop-shadow(0 0 10px currentColor)
-        drop-shadow(0 0 25px currentColor)
-        drop-shadow(0 0 40px currentColor);
+        drop-shadow(0 0 6px rgba(255, 230, 0, 0.6))
+        drop-shadow(0 0 14px rgba(120, 220, 255, 0.4));
     }
 
-    @keyframes neonShift {
+    @keyframes neonMove {
       0% {
-        color: rgb(255, 230, 0); /* żółty */
-      }
-      50% {
-        color: rgb(120, 220, 255); /* jasny niebieski */
+        background-position: 0% 50%;
       }
       100% {
-        color: rgb(255, 230, 0);
+        background-position: 100% 50%;
       }
     }
   </style>
@@ -88,7 +92,6 @@
     window.addEventListener("resize", resize);
     resize();
 
-    // ⭐ TŁO – KROPKI
     const bgStars = [];
     for (let i = 0; i < 350; i++) {
       bgStars.push({
@@ -99,7 +102,6 @@
       });
     }
 
-    // 🌠 SPADAJĄCE
     let shootingStars = [];
 
     function createShootingStar() {
@@ -115,7 +117,6 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // kropki
       bgStars.forEach(s => {
         s.a += (Math.random() - 0.5) * 0.02;
         s.a = Math.max(0.2, Math.min(1, s.a));
@@ -125,7 +126,6 @@
         ctx.fill();
       });
 
-      // nowe spadające
       if (Math.random() < 0.12) {
         shootingStars.push(createShootingStar());
       }
