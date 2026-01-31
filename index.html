@@ -2,8 +2,14 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Gwiezdne tło</title>
+  <title>darek top EU</title>
+
   <style>
+    @font-face {
+      font-family: "SuperBoys";
+      src: url("fonts/SuperBoys.ttf") format("truetype");
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -11,14 +17,65 @@
       height: 100%;
       background: black;
       overflow: hidden;
+      font-family: "SuperBoys", sans-serif;
     }
+
     canvas {
-      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    .main-text {
+      font-size: 72px;
+      color: white;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 25px rgba(255,255,255,0.4);
+    }
+
+    .neon {
+      font-size: 72px;
+      animation: neonShift 4s linear infinite;
+      filter:
+        drop-shadow(0 0 10px currentColor)
+        drop-shadow(0 0 25px currentColor)
+        drop-shadow(0 0 40px currentColor);
+    }
+
+    @keyframes neonShift {
+      0% {
+        color: rgb(255, 230, 0); /* żółty */
+      }
+      50% {
+        color: rgb(120, 220, 255); /* jasny niebieski */
+      }
+      100% {
+        color: rgb(255, 230, 0);
+      }
     }
   </style>
 </head>
 <body>
+
   <canvas id="stars"></canvas>
+
+  <div class="center">
+    <div class="main-text">darek top EU</div>
+    <div class="neon">NEON</div>
+  </div>
 
   <script>
     const canvas = document.getElementById("stars");
@@ -31,77 +88,68 @@
     window.addEventListener("resize", resize);
     resize();
 
-    // ⭐ ZWYKŁE GWIAZDY (KROPKI)
-    const backgroundStars = [];
-    const STAR_COUNT = 300;
-
-    for (let i = 0; i < STAR_COUNT; i++) {
-      backgroundStars.push({
+    // ⭐ TŁO – KROPKI
+    const bgStars = [];
+    for (let i = 0; i < 350; i++) {
+      bgStars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 1.5,
-        alpha: Math.random()
+        r: Math.random() * 1.5,
+        a: Math.random()
       });
     }
 
-    function drawBackgroundStars() {
-      backgroundStars.forEach(star => {
-        star.alpha += (Math.random() - 0.5) * 0.02;
-        star.alpha = Math.max(0.2, Math.min(1, star.alpha));
-
-        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    // 🌠 SPADAJĄCE GWIAZDY
+    // 🌠 SPADAJĄCE
     let shootingStars = [];
 
     function createShootingStar() {
       return {
         x: Math.random() * canvas.width,
         y: Math.random() * -canvas.height,
-        length: Math.random() * 100 + 50,
+        len: Math.random() * 120 + 40,
         speed: Math.random() * 8 + 6,
-        opacity: Math.random() * 0.5 + 0.5
+        o: Math.random() * 0.5 + 0.5
       };
     }
 
-    function drawShootingStars() {
-      shootingStars.forEach((star, index) => {
-        ctx.strokeStyle = `rgba(255,255,255,${star.opacity})`;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(star.x, star.y);
-        ctx.lineTo(star.x + star.length, star.y + star.length);
-        ctx.stroke();
-
-        star.x += star.speed;
-        star.y += star.speed;
-
-        if (star.y > canvas.height || star.x > canvas.width) {
-          shootingStars.splice(index, 1);
-        }
-      });
-    }
-
-    function update() {
+    function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      drawBackgroundStars();
+      // kropki
+      bgStars.forEach(s => {
+        s.a += (Math.random() - 0.5) * 0.02;
+        s.a = Math.max(0.2, Math.min(1, s.a));
+        ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-      // WIĘCEJ spadających gwiazd
+      // nowe spadające
       if (Math.random() < 0.12) {
         shootingStars.push(createShootingStar());
       }
 
-      drawShootingStars();
-      requestAnimationFrame(update);
+      shootingStars.forEach((s, i) => {
+        ctx.strokeStyle = `rgba(255,255,255,${s.o})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x + s.len, s.y + s.len);
+        ctx.stroke();
+
+        s.x += s.speed;
+        s.y += s.speed;
+
+        if (s.y > canvas.height || s.x > canvas.width) {
+          shootingStars.splice(i, 1);
+        }
+      });
+
+      requestAnimationFrame(draw);
     }
 
-    update();
+    draw();
   </script>
 </body>
 </html>
